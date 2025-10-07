@@ -11,7 +11,7 @@ function statement(invoice, plays) {
     }).format;
 
     for (let perf of invoice.performances) {
-        const thisAmount = amountFor(perf,playFor(perf));
+        const thisAmount = amountFor(perf);
         // add volume credits
         volumeCredits += Math.max(perf.audience - 30, 0);
         // add extra credit for every five comedy attendees
