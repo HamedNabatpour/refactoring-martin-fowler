@@ -11,10 +11,7 @@ function statement(invoice, plays) {
     }).format;
 
     for (let perf of invoice.performances) {
-        // add volume credits
-        volumeCredits += Math.max(perf.audience - 30, 0);
-        // add extra credit for every five comedy attendees
-        if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+        volumeCredits += volumeCreditsFor(perf);
 
         // print line for this order (with newline)
         result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience} seats)\n`;
@@ -23,6 +20,15 @@ function statement(invoice, plays) {
 
     result += `Amount owed is ${format(totalAmount / 100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
+    return result;
+}
+
+const comedy = "comedy";
+
+function volumeCreditsFor(aPerformance){
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if (comedy === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
     return result;
 }
 
@@ -36,7 +42,7 @@ function amountFor(aPerformance){
             }
             break;
 
-        case "comedy":
+        case comedy:
             result = 30000;
             if (aPerformance.audience > 20) {
                 result += 10000 + 500 * (aPerformance.audience - 20);
@@ -53,7 +59,7 @@ function amountFor(aPerformance){
 
 const plays = {
     hamlet: { name: "Hamlet", type: "tragedy" },
-    aslike: { name: "As You Like It", type: "comedy" },
+    aslike: { name: "As You Like It", type: comedy },
     othello: { name: "Othello", type: "tragedy" }
 }
 
